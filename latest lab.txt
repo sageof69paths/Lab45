@@ -1,0 +1,719 @@
+Create class Employee with following attributes -
+Emp - id, name, dateofpinning (object of date clock) , salary
+Manager - inherit Manager from Employee having extra attribute - ta(travelling
+allowance), Hra (house rent allowance)
+SalesPerson - inherit SalesPerson from Employee having extra attribute - sales, comn
+WageEmp - inherit WageEmp from SalesPearson having extra attribute - rate
+Implement Calculate for all classes Emp → pure virtual
+-------->
+
+*********************************************** POLYYYYYYYYYYYYY INHERITANCE ****************************************************************************8
+
+
+#include <iostream>
+using namespace std;
+
+// Employee class serves as a base class with a pure virtual function for salary calculation
+class Employee {
+protected:
+    int id;
+    string name;
+    double salary;
+public:
+    Employee(int i, string n, double s) : id(i), name(n), salary(s) {}
+    virtual void Calculate() = 0;
+    void display() {
+        cout << "ID: " << id << " | Name: " << name << " | Salary: " << salary << "\n";
+    }
+};
+
+// Manager class inherits from Employee and includes additional allowances (TA and HRA)
+class Manager : public Employee {
+    double ta, hra;
+public:
+    Manager(int i, string n, double s, double t, double h) : Employee(i, n, s), ta(t), hra(h) {}
+    void Calculate() override { salary = salary + ta + hra; }
+};
+
+// SalesPerson class inherits from Employee and calculates salary based on sales commission
+class SalesPerson : public Employee {
+    double sales, commission;
+public:
+    SalesPerson(int i, string n, double s, double sa, double c) : Employee(i, n, s), sales(sa), commission(c) {}
+    void Calculate() override { salary = salary + (sales * commission); }
+};
+
+class WageEmp : public SalesPerson {
+    double rate;
+public:
+    WageEmp(int i, string n, double s, double sa, double c, double r) : SalesPerson(i, n, s, sa, c), rate(r) {}
+    void Calculate() override { salary = salary + rate; }
+};
+
+int main() {
+    int choice;
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Create Manager\n";
+        cout << "2. Create SalesPerson\n";
+        cout << "3. Create Wage Employee\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                Manager m(1, "John", 50000, 5000, 10000);
+                m.Calculate();
+                m.display();
+                break;
+            }
+            case 2: {
+                SalesPerson sp(2, "Alice", 30000, 10000, 0.1);
+                sp.Calculate();
+                sp.display();
+                break;
+            }
+            case 3: {
+                WageEmp we(3, "Bob", 25000, 5000, 0.05, 2000);
+                we.Calculate();
+                we.display();
+                break;
+            }
+            case 4:
+                cout << "Exiting program...\n";
+                break;
+            default:
+                cout << "Invalid choice, please try again.\n";
+        }
+    } while (choice != 4);
+    
+    return 0;
+}
+
+
+***************************************************************** Calculate DIAMOND PROBLEMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM  ?// Math 1 Math 2 Multiple inheritance
+
+
+#include <iostream>
+using namespace std;
+
+// Base class Math1 with basic arithmetic operations
+class Math1 {
+public:
+    int Add(int a, int b) {
+        return a + b;
+    }
+    
+    int Sub(int a, int b) {
+        return a - b;
+    }
+    
+    virtual void CalArea() {
+        cout << "Math1 Area Calculation - This function can be overridden in derived classes.\n";
+    }
+};
+
+// Base class Math2 with multiplication and division operations
+class Math2 {
+public:
+    int Mul(int a, int b) {
+        return a * b;
+    }
+    
+    int Div(int a, int b) {
+        if (b != 0)
+            return a / b;
+        else {
+            cout << "Error: Division by zero is not allowed.\n";
+            return 0;
+        }
+    }
+    
+    virtual void CalArea() {
+        cout << "Math2 Area Calculation - This function can be overridden in derived classes.\n";
+    }
+};
+
+// Derived class Calculator inheriting from both Math1 and Math2, solving diamond problem using virtual inheritance
+class Calculator : public virtual Math1, public virtual Math2 {
+public:
+    void CalArea() override {
+        cout << "Calculator Area Calculation - Overridden function in derived class.\n";
+    }
+};
+
+int main() {
+    Calculator calc;
+    int choice, a, b;
+    
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Addition\n";
+        cout << "2. Subtraction\n";
+        cout << "3. Multiplication\n";
+        cout << "4. Division\n";
+        cout << "5. Calculate Area\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                cout << "Enter two numbers: ";
+                cin >> a >> b;
+                cout << "Result: " << calc.Add(a, b) << "\n";
+                break;
+            case 2:
+                cout << "Enter two numbers: ";
+                cin >> a >> b;
+                cout << "Result: " << calc.Sub(a, b) << "\n";
+                break;
+            case 3:
+                cout << "Enter two numbers: ";
+                cin >> a >> b;
+                cout << "Result: " << calc.Mul(a, b) << "\n";
+                break;
+            case 4:
+                cout << "Enter two numbers: ";
+                cin >> a >> b;
+                cout << "Result: " << calc.Div(a, b) << "\n";
+                break;
+            case 5:
+                calc.CalArea();
+                break;
+            case 6:
+                cout << "Exiting program...\n";
+                break;
+            default:
+                cout << "Invalid choice, please try again.\n";
+        }
+    } while (choice != 6);
+    
+    return 0;
+}
+
+*************************************** COMPLEX OVERLOADING ****************************
+
+#include <iostream>
+using namespace std;
+
+class Complex {
+    int real, imag;
+public:
+    // Constructor
+    Complex(int r = 0, int i = 0) {
+        real = r;
+        imag = i;
+    }
+    
+    // Postfix increment (c1++)
+    Complex operator++(int) {
+        Complex temp = *this;
+        real++;
+        imag++;
+        return temp;
+    }
+    
+    // Prefix increment (++c1)
+    Complex operator++() {
+        real++;
+        imag++;
+        return *this;
+    }
+    
+    // Addition: Complex + int
+    friend Complex operator+(const Complex& c, int val) {
+        return Complex(c.real + val, c.imag);
+    }
+    
+    // Addition: int + Complex
+    friend Complex operator+(int val, const Complex& c) {
+        return Complex(c.real + val, c.imag);
+    }
+    
+    // Output stream (<<)
+    friend ostream& operator<<(ostream& out, const Complex& c) {
+        out << c.real << " + " << c.imag << "i";
+        return out;
+    }
+};
+
+int main() {
+    Complex c1(10, 20), c2, c3, c4, c5;
+    
+    c2 = c1++;
+    c3 = ++c1;
+    c4 = c1 + 5;
+    c5 = 5 + c1;
+    
+    cout << "c1: " << c1 << "\n";
+    cout << "c2: " << c2 << "\n";
+    cout << "c3: " << c3 << "\n";
+    cout << "c4: " << c4 << "\n";
+    cout << "c5: " << c5 << "\n";
+    
+    return 0;
+}
+
+************************************** FILESSSSSS **********************************
+
+Create Book class and implement the following using file -
+● Add Book
+● Display all
+● Display specific (pos) - using (tellp, tellg)
+● Delete (According to BookId)
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+class Book {
+public:
+    int bookId;
+    char title[50];
+    
+    void getData() {
+        cout << "Enter Book ID: ";
+        cin >> bookId;
+        cin.ignore(); // To clear newline from input buffer
+        cout << "Enter Book Title: ";
+        cin.getline(title, 50);
+    }
+    
+    void showData() {
+        cout << "Book ID: " << bookId << ", Title: " << title << "\n";
+    }
+};
+
+void addBook() {
+    ofstream outFile("books.dat", ios::binary | ios::app);
+    Book b;
+    b.getData();
+    outFile.write((char*)&b, sizeof(b));
+    outFile.close();
+}
+
+void displayAll() {
+    ifstream inFile("books.dat", ios::binary);
+    Book b;
+    while (inFile.read((char*)&b, sizeof(b))) {
+        b.showData();
+    }
+    inFile.close();
+}
+
+void displaySpecific(int pos) {
+    ifstream inFile("books.dat", ios::binary);
+    Book b;
+    inFile.seekg(pos * sizeof(b), ios::beg);
+    if (inFile.read((char*)&b, sizeof(b))) {
+        b.showData();
+    } else {
+        cout << "Invalid position!\n";
+    }
+    inFile.close();
+}
+
+void deleteBook(int id) {
+    ifstream inFile("books.dat", ios::binary);
+    ofstream outFile("temp.dat", ios::binary);
+    Book b;
+    bool found = false;
+    while (inFile.read((char*)&b, sizeof(b))) {
+        if (b.bookId != id) {
+            outFile.write((char*)&b, sizeof(b));
+        } else {
+            found = true;
+        }
+    }
+    inFile.close();
+    outFile.close();
+    remove("books.dat");
+    rename("temp.dat", "books.dat");
+    if (found)
+        cout << "Book deleted successfully!\n";
+    else
+        cout << "Book not found!\n";
+}
+
+int main() {
+    int choice, id, pos;
+    do {
+        cout << "\n1. Add Book\n2. Display All Books\n3. Display Specific Book (Position)\n4. Delete Book (by ID)\n5. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1: addBook(); break;
+            case 2: displayAll(); break;
+            case 3:
+                cout << "Enter position: ";
+                cin >> pos;
+                displaySpecific(pos);
+                break;
+            case 4:
+                cout << "Enter Book ID to delete: ";
+                cin >> id;
+                deleteBook(id);
+                break;
+            case 5: cout << "Exiting...\n"; break;
+            default: cout << "Invalid choice!\n";
+        }
+    } while (choice != 5);
+    return 0;
+}
+
+************************ VECTORRRR STLLLL *************************************************************************
+
+#include <iostream> 
+#include <string> 
+#include <vector> 
+using namespace std;
+
+class Emp{
+	int eid;
+	string name;
+	string address;
+	double salary;
+
+	public:
+
+	void Add(){
+	cout<<"Enter Eid: ";
+	cin>>eid;
+	cout<<"Enter Name: ";
+	cin>>name;
+	cout<<"Enter Address : ";
+	cin>>address;
+	cout<<"Enter Salary : ";
+	cin>>salary;
+	}
+
+	void Display(){
+	 cout<<"\nDisplaying vector"<<endl;
+	 cout<<"EID : "<<eid<<endl;
+	 cout<<"Name : "<<name<<endl;
+	 cout<<"Address : "<<address<<endl;
+	 cout<<"Salary : "<<salary<<endl;
+	}
+
+	int Search(vector <Emp>e,int eid,int n){
+	int ind;
+	for(int i=0;i<n;i++){
+	if(eid==e[i].eid){
+		cout<<"found: "<<i+1<<endl;
+		ind=i;
+	}
+	}
+	return ind;
+	}
+
+	void modify(vector <Emp>& e,int index){
+		
+		e[index].eid=123;
+		e[index].name="om";
+		e[index].address="pune";
+		e[index].salary=150000;
+		cout<<"Modified..."<<endl;
+	}
+};
+
+int main(){
+	Emp e;
+	vector<Emp> emp;
+	int n;
+	cout<<"Enter Number of Employees : ";
+	cin>>n;
+	for(int i=0;i<n;i++){
+	e.Add();
+	emp.push_back(e);
+	}
+	for(int i=0;i<n;i++){
+        emp[i].Display();
+	}
+	int key;
+	cout<<"Enter key to Search : ";
+	cin>>key;
+	int ind=e.Search(emp,key,n);
+	cout<<ind;
+	//emp.erase(emp.begin()+ind);
+	//emp.erase(ind);
+	e.modify(emp,ind);
+	//cout<<emp[ind]<<endl;
+	for(int i=0;i<emp.size();i++){
+        emp[i].Display();
+        }
+	return 0;
+}
+
+
+***************************************** MATH 1 MATH 2 : Multiple Inheritance ******************************************
+
+
+
+#include <iostream>
+using namespace std;
+
+class Math1
+{
+private:
+    int n1, n2;
+    double r;
+public:
+    Math1() : n1(0), n2(0) {}
+    Math1(int n1, int n2) : n1(n1), n2(n2) {}
+    void Accept() {
+        cout << " Enter the Num1 & Num2 : ";
+        cin >> n1 >> n2;
+    }
+    void Display() {
+        cout << "num 1 : " << n1 << endl;
+        cout << "num 2 : " << n2 << endl;
+    }
+    void Add() {
+        Accept();
+        cout << " Add = " << n1 + n2 << endl;
+    }
+    void Sub() {
+        Accept();
+        cout << " Sub = " << n1 - n2 << endl;
+    }
+    double CalArea() {
+        cout << " Enter the radius : ";
+        cin >> r;
+        double pi = 3.14;
+        return pi * (r * r);
+    }
+};
+
+class Math2
+{
+private:
+    int n1, n2, s;
+public:
+    Math2() : n1(0), n2(0) {}
+    Math2(int n1, int n2) : n1(n1), n2(n2) {}
+    void Accept() {
+        cout << " Enter the num1 & num2 : ";
+        cin >> n1 >> n2;
+    }
+    void Display() {
+        cout << "Num 1 = " << n1 << endl << "Num 2 = " << n2 << endl;
+    }
+    void Mul() {
+        Accept();
+        cout << " Mul = " << n1 * n2 << endl;
+    }
+    void Div() {
+        Accept();
+        cout << " Div = " << n1 / (double)n2 << endl;
+    }
+    double CalArea() {
+        cout << " Enter the side : ";
+        cin >> s;
+        return s * s;
+    }
+};
+
+class Calculator : public Math1, public Math2
+{
+private:
+    int ch;
+public:
+    Calculator() : ch(0) {}
+    Calculator(int ch) : ch(ch) {}
+    void Fun() {
+        do {
+            cout << "************************************** \n"
+                 << "             Calculator\n"
+                 << "************************************** \n"
+                 << " 1.Add \n 2.Sub \n 3.Mul \n 4.Div \n"
+                 << " 5.CalArea of Circle \n 6.CalArea of Square\n 0.Exit \n"
+                 << " Enter your choice : ";
+            cin >> ch;
+            switch (ch) {
+                case 1:
+                    Add();
+                    break;
+                case 2:
+                    Sub();
+                    break;
+                case 3:
+                    Mul();
+                    break;
+                case 4:
+                    Div();
+                    break;
+                case 5: {
+                    double ans = CalArea();
+                    cout << " Circle Area = " << ans << endl;
+                    break;
+                }
+                case 6: {
+                    double ans = Math2::CalArea();
+                    cout << " Square Area = " << ans << endl;
+                    break;
+                }
+                case 0:
+                    exit(0);
+                    break;
+                default:
+                    cout << " Invalid Input!" << endl;
+                    break;
+            }
+        } while (true);
+    }
+};
+
+int main()
+{
+    Calculator c;
+    c.Fun();
+    return 0;
+}
+
+Calculator.txt
+Displaying Calculator.txt.
+
+******************************************************** ACCOUNT WITHDRAW DEPOSIT *************************************************
+Create class Account with -
+DM - acno, name, balance
+MF - Constructors, Accept, Display
+withdraw, deposit
+Handle following exceptions -
+Withdraw - lowBalance - if balance < 1000
+Deposit - PanCard Require - if amt >= 50,000
+
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Account {
+private:
+    string acno;
+    string name;
+    double balance;
+
+public:
+    // Constructor
+    Account(string acno, string name, double balance = 0.0)
+        : acno(acno), name(name), balance(balance) {}
+
+    // Method to accept account details
+    void accept() {
+        cout << "Enter account number: ";
+        cin >> acno;
+        cout << "Enter account holder name: ";
+        cin.ignore(); // To ignore the newline character left in the buffer
+        getline(cin, name);
+        cout << "Enter initial balance: ";
+        cin >> balance;
+    }
+
+    // Method to display account details
+    void display() const {
+        cout << "Account Number: " << acno << endl;
+        cout << "Account Holder Name: " << name << endl;
+        cout << "Balance: " << balance << endl;
+    }
+
+    // Method to withdraw money
+    void withdraw(double amount) {
+        if (balance < 1000) {
+            cout << "Withdrawal denied: Balance is below the minimum required amount of 1000." << endl;
+            return;
+        }
+        if (amount > balance) {
+            cout << "Withdrawal denied: Insufficient funds." << endl;
+            return;
+        }
+        balance -= amount;
+        cout << "Withdrawal successful! New balance: " << balance << endl;
+    }
+
+    // Method to deposit money
+    void deposit(double amount) {
+        if (amount >= 50000) {
+            string panCard;
+            cout << "PAN Card required for deposits over 50,000. Do you have a PAN card? (yes/no): ";
+            cin >> panCard;
+            if (panCard != "yes") {
+                cout << "Deposit denied: PAN Card is required for this amount." << endl;
+                return;
+            }
+        }
+        balance += amount;
+        cout << "Deposit successful! New balance: " << balance << endl;
+    }
+};
+
+int main() {
+    Account account("123456", "John Doe", 2000); // Initial account
+    int choice;
+    double amount;
+
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Accept Account Details\n";
+        cout << "2. Display Account Details\n";
+        cout << "3. Withdraw Money\n";
+        cout << "4. Deposit Money\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                account.accept();
+                break;
+            case 2:
+                account.display();
+                break;
+            case 3:
+                cout << "Enter amount to withdraw: ";
+                cin >> amount;
+                account.withdraw(amount);
+                break;
+            case 4:
+                cout << "Enter amount to deposit: ";
+                cin >> amount;
+                account.deposit(amount);
+                break;
+            case 5:
+                cout << "Exiting the program." << endl;
+                break;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
