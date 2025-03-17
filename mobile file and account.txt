@@ -1,0 +1,240 @@
+#include<iostream>
+using namespace std;
+
+class MobilePhone{
+        int serialNo;
+        char modelNo[20];
+        char brandName[20];
+        double price;
+
+        public:
+        void Accept();
+        void Display();
+        void WriteToFile();
+        int ReadFromFile(MobilePhone [],int);
+        void DisplaySortByPrice();
+};
+#include<iostream>
+#include"MobilePhone.h"
+#include<fstream>
+void MobilePhone::Accept(){
+cout<<"Enter Serial Number : ";
+cin>>serialNo;
+cout<<"Enter Model Number : ";
+cin>>modelNo;
+cout<<"Enter Brand Name : ";
+cin>>brandName;
+cout<<"Enter Price : ";
+cin>>price;
+}
+
+void MobilePhone::Display(){
+cout<<"Serial No : "<<serialNo<<endl;
+cout<<"Model No : "<<modelNo<<endl;
+cout<<"Brand Name : "<<brandName<<endl;
+cout<<"Price : "<<price<<endl;
+}
+
+void MobilePhone::WriteToFile(){
+MobilePhone ph;
+ph.Accept();
+ofstream fout("mobilephones.dat",ios::app|ios::binary);
+if(!fout)
+{
+cout<<"Error opening file"<<endl;
+return;
+}
+fout.write((char*)&ph,sizeof(MobilePhone));
+fout.close();
+cout<<"Mobile Phone added successfully!\n";
+}
+
+int MobilePhone::ReadFromFile(MobilePhone phones[],int maxSize){
+        ifstream fin("mobilephones.dat",ios::in|ios::binary);
+        if(!fin){
+                cout<<"No records found"<<endl;
+                return 0;
+        }
+        int count=0;
+        while(count<maxSize && fin.read((char*)&phones[count],sizeof(MobilePhone))){
+        count++;
+        }
+        fin.close();
+        return count;
+}
+
+void MobilePhone::DisplaySortByPrice()
+{
+        const int maxSize=100;
+        MobilePhone phones[maxSize];
+        int count=ReadFromFile(phones,maxSize);
+        if(count==0)return;
+
+        for(int i=0;i<count;i++){
+                for(int j=0;j<count-i-1;j++){
+                        MobilePhone temp;
+                        if(phones[j].price>phones[j+1].price){
+                                temp=phones[j];
+                                phones[j]=phones[j+1];
+                                phones[j+1]=temp;
+                        }
+                }
+        }
+
+        for(int i=0;i<count;i++){
+        phones[i].Display();
+        }
+}
+#include<iostream>
+#include"MobilePhone.h"
+using namespace std;
+
+int main(){
+        int choice;
+        const int maxSize=100;
+        MobilePhone phones[maxSize],mp;
+        do{
+                cout<<"\nMenu:"<<endl;
+                cout<<"1.Add MobilePhone"<<endl;
+                cout<<"2.Read all Mobile Phones"<<endl;
+                cout<<"3.Read And Display sorted by Price"<<endl;
+                cout<<"4.Exit"<<endl;
+                cout<<"Enter choice : ";
+                cin>>choice;
+                cout<<endl;
+                switch(choice){
+                        case 1:mp.WriteToFile();
+                               break;
+                        case 2:{
+                                       int count=mp.ReadFromFile(phones,maxSize);
+                                       for(int i=0;i<count;i++){
+                                       phones[i].Display();
+                                       }
+                               }       break;
+                        case 3:{
+                                       cout<<endl;
+                                       mp.DisplaySortByPrice();
+                               }break;
+                        case 4:
+                               exit(0);
+                               break;
+                        default :
+                               cout<<"Enter Valid Choice"<<endl;
+                }
+        }while(choice!=4);
+        return 0;
+}
+********************************************************************Account***********************************
+#include<string>
+using namespace std;
+
+class Account
+{
+        private:
+        static int count;
+        long accno;
+        string name;
+        double bal;
+        double withdrawl;
+        double deposit;
+
+        public:
+        void Accept();
+        void Display();
+        void Transaction();
+        Account();
+};
+#include<iostream>
+#include<string>
+#include "Account.h"
+using namespace std;
+                int Account::count=1;
+                void Account::Accept()
+                {
+                        cout<<"Enter the Account Details : "<<endl;
+                        //cout<<"Enter the Account number : "<<endl;
+                        //cin>>accno;
+                        cout<<"Enter the Account Holder Name : "<<endl;
+                        cin>>name;
+                        cout<<"Enter the Account Balance: "<<endl;
+                        cin>>bal;
+                }
+
+                void Account::Display()
+                {
+
+                        cout<<"accno = "<<accno<<endl;
+                        cout<<"name = "<<name<<endl;
+                        cout<<"balance = "<<bal<<endl;
+                }
+
+                void Account::Transaction()
+                { int choice;
+                        do{
+                cout<<"1 for Withdrawl"<<endl;
+                cout<<"2 for Deposit"<<endl;
+                cout<<"3 for Exit"<<endl;
+                cout<<"Enter your choice : ";
+                cin>>choice;
+                switch(choice){
+                        case 1:
+                                cout<<"Enter the amount to withdrawl :";
+                                cin>>withdrawl;
+                                if(withdrawl>bal)
+                                {
+                                        cout<<"Insufficient Balance"<<endl;
+                                }
+                                else
+                                {
+                                        bal=bal-withdrawl;
+                                        cout<<"bal :"<<bal<<endl;
+                                }
+                                break;
+
+                        case 2:
+                                cout<<"Enter the amount to be Deposited :";
+                                cin>>deposit;
+                                bal=bal+deposit;
+                                cout<<"Balance :"<<bal<<endl;
+                                break;
+                        case 3:
+                                exit(0);
+                        default:
+                                cout<<"Invalid Option";
+                }
+                }while(choice!=3);
+                }
+                Account::Account()
+                {
+                        accno = count++;
+                        name = "";
+                        bal = 0;
+                        withdrawl=0;
+                        deposit=0;
+                }
+#include<iostream>
+#include"Account.h"
+using namespace std;
+
+int main(){
+        int n;
+        cout<<"Enter the number of Account to Entered: ";
+        cin>>n;
+        Account *a=new Account[n];
+        for(int i=0;i<n;i++)
+        {
+        a[i].Accept();
+        }
+
+        for(int i=0;i<n;i++)
+        {
+        a[i].Display();
+        }
+
+        for(int i=0;i<n;i++)
+        {
+        a[i].Transaction();
+        }
+}
+
+
